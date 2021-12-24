@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 exports.handler = async (event, context, callback) => {
-  const { title, post, user_id } = JSON.parse(event.body)
+  const { title, post, user_id, media, like, dislike } = JSON.parse(event.body)
   try {
     const isUserExist = await prisma.note_users.findUnique({
       where: {
@@ -20,9 +20,12 @@ exports.handler = async (event, context, callback) => {
 
     const newPost = await prisma.note_posts.create({
       data: {
+        user_id,
         title,
         post,
-        user_id,
+        media,
+        like,
+        dislike,
       },
     })
     return {

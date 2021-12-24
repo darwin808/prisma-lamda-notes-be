@@ -38,6 +38,7 @@ model note_users {
   password String @db.VarChar(500) 
   email String @db.VarChar(255) @unique 
   posts note_posts[]
+  profile note_user_profile? // renamed from `Profile` -> `profile`
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -49,5 +50,14 @@ model note_posts {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   note_users note_users @relation(fields: [user_id] , references: [id])
-  user_id Int
+  user_id Int @unique
+  media String[]
+  like Int? @default(0)
+  dislike Int? @default(0)
+}
+model note_user_profile {
+  id     Int     @default(autoincrement()) @id
+  bio    String?
+  userId Int     @unique  // relation scalar field
+  user   note_users    @relation(fields: [userId], references: [id]) // renamed from `User` -> `user`
 }
