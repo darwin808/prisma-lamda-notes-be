@@ -1,0 +1,77 @@
+service: prisma-aws-lambda-example
+plugins:
+  - serverless-dotenv-plugin
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs12.x
+
+functions:
+  status:
+    handler: handlers/status.handler
+    events:
+      - http:
+          method: GET
+          path: /
+  seed:
+    handler: handlers/seed.handler
+    events:
+      - http:
+          method: GET
+          path: /seed
+  getUsers:
+    handler: handlers/users.handler
+    events:
+      - http:
+          method: GET
+          path: /users
+  createUser:
+    handler: handlers/create-user.handler
+    events:
+      - http:
+          method: POST
+          path: /users
+  getPosts:
+    handler: handlers/posts.handler
+    events:
+      - http:
+          method: GET
+          path: /posts
+  #start here for NOTESSS
+  getNoteUsers:
+    handler: handlers/Get-NoteUsers.handler
+    events:
+      - http:
+          method: GET
+          path: /notes/user
+          cors: true
+  createNotePost:
+    handler: handlers/Create-NotePost.handler
+    events:
+      - http:
+          method: POST
+          path: /notes/post
+          cors: true
+  createNoteUser:
+    handler: handlers/Create-NoteUser.handler
+    events:
+      - http:
+          method: POST
+          path: /notes/user
+          cors: true
+  loginNoteUser:
+    handler: handlers/Login-NoteUser.handler
+    events:
+      - http:
+          method: POST
+          path: /notes/login
+          cors: true
+
+# only include the Prisma binary required on AWS Lambda while packaging
+package:
+  patterns:
+    - '!node_modules/.prisma/client/libquery_engine-*'
+    - 'node_modules/.prisma/client/libquery_engine-rhel-*'
+    - '!node_modules/prisma/libquery_engine-*'
+    - '!node_modules/@prisma/engines/**'
